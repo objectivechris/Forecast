@@ -12,13 +12,15 @@ enum OWError: LocalizedError {
     case requestFailed
     case parsingFailure
     case invalidURL
+    case locationNotFound
     
     var errorDescription: String? {
         switch self {
         case .invalidServerResponse: "The server returned an invalid response."
         case .invalidURL: "URL string is malformed."
-        case .requestFailed: "The rquest has failed."
+        case .requestFailed: "The network request has failed. Please try again."
         case .parsingFailure: "There was a parsing error."
+        case .locationNotFound: "Invalid location. Please verify US city."
         }
     }
 }

@@ -15,8 +15,6 @@ class WeatherViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var textField: UITextField!
     
-    @Published var viewModel = WeatherViewModel()
-    
     private var expanded = false
     private var selectedRowIndex: Int?
     private var subscriptions = Set<AnyCancellable>()
@@ -39,7 +37,9 @@ class WeatherViewController: UIViewController {
             tableView.reloadData()
         }
     }
-        
+    
+    let viewModel = WeatherViewModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UINib(nibName: "ForecastCell", bundle: nil), forCellReuseIdentifier: "ForecastCell")
@@ -58,6 +58,14 @@ class WeatherViewController: UIViewController {
             .receive(on: RunLoop.main)
             .sink { [weak self] forecasts in
                 self?.forecasts = forecasts
+            }
+            .store(in: &subscriptions)
+        
+        viewModel.$error
+            .receive(on: RunLoop.main)
+            .compactMap { $0 }
+            .sink { [weak self] error in
+                self?.showAlert(message: error.errorDescription ?? "Unknown Error")
             }
             .store(in: &subscriptions)
     }
@@ -101,6 +109,7 @@ extension WeatherViewController: UITableViewDelegate, UITableViewDataSource {
         return (indexPath.row == selectedRowIndex && expanded) ? 120 : 55
     }
     
+    // Animates cell on  selection
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if selectedRowIndex != indexPath.row {
             expanded = true
@@ -121,13 +130,11 @@ extension WeatherViewController: CLLocationManagerDelegate {
         switch manager.authorizationStatus {
         case .notDetermined: manager.requestWhenInUseAuthorization()
         case .authorizedWhenInUse:
-            manager.startUpdatingLocation()
             Task {
                 try await viewModel.fetchCurrentWeather(fromLocation: manager.location)
             }
-            manager.stopUpdatingLocation()
         default:
-            showAlert(message: "Please check your location permissions.")
+            showAlert(message: "Please check your location permissions in Settings.")
             tableView.reloadData()
         }
     }

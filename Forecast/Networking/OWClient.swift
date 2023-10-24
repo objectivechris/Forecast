@@ -11,7 +11,7 @@ class OWClient {
     
     private let session: URLSession
     
-    init(configuration: URLSessionConfiguration) {
+    private init(configuration: URLSessionConfiguration) {
         self.session = URLSession(configuration: configuration)
     }
     
@@ -24,52 +24,21 @@ class OWClient {
     }
     
     func getTenDayForecast(in city: String) async throws -> [Forecast] {
-        return try await request(url: OWEndpoint.tenDayForecast(city).url, responseType: List.self).list
+        return try await request(url: OWEndpoint.tenDayForecast(city).url, responseType: Forecasts.self).list
     }
 }
 
 private extension OWClient {
-    private func request<ResponseType: Decodable>(url: URL?, responseType: ResponseType.Type, completion: @escaping (Result<ResponseType, Error>) -> Void) {
-
-        guard let url = url else {
-            completion(.failure(OWError.invalidURL))
-            return
-        }
-        
-        let urlRequest = URLRequest(url: url)
-                
-        let task = session.dataTask(with: urlRequest) { (data, response, error) in
-        guard let data = data else {
-            DispatchQueue.main.async {
-                completion(.failure(error ?? OWError.invalidServerResponse))
-            }
-            return
-        }
-        let decoder = JSONDecoder()
-            do {
-                let responseObject = try decoder.decode(ResponseType.self, from: data)
-                DispatchQueue.main.async {
-                    completion(.success(responseObject))
-                }
-            } catch {
-                completion(.failure(OWError.parsingFailure))
-            }
-        }
-        task.resume()
-    }
-    
+    // Decodes types that only conform to Decodable
     func request<ResponseType: Decodable>(url: URL?, responseType: ResponseType.Type) async throws -> ResponseType {
+        guard let url = url else { throw OWError.invalidURL }
+        let urlRequest = URLRequest(url: url)
+        
         do {
-            return try await withCheckedThrowingContinuation { continuation in
-                request(url: url, responseType: responseType) { result in
-                    switch result {
-                    case .success(let responseType):
-                        continuation.resume(returning: responseType)
-                    case .failure(let error):
-                        continuation.resume(throwing: error)
-                    }
-                }
-            }
+            let (data, response) = try await session.data(for: urlRequest)
+            guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw OWError.invalidServerResponse }
+            let decoder = JSONDecoder()
+            return try decoder.decode(ResponseType.self, from: data)
         } catch {
             throw OWError.parsingFailure
         }

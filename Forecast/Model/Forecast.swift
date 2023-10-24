@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct List: Codable {
+struct Forecasts: Codable {
     var list: [Forecast]
 }
 

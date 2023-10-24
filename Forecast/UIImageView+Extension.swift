@@ -8,6 +8,7 @@
 import UIKit
 
 extension UIImageView {
+    // Download and cache weather icons for later use
     func load(url: URL, placeholder: UIImage?, cache: URLCache? = nil) async throws {
         let cache = cache ?? URLCache.shared
         let request = URLRequest(url: url)

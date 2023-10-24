@@ -27,6 +27,7 @@ enum OWEndpoint {
         
         return baseURL + endpoint
     }
+    
     var url: URL {
         guard let url = URL(string: path) else {
             preconditionFailure("The url is invalid")

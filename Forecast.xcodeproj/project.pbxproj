@@ -46,6 +46,7 @@
 		D04FBA422AE6A9A900481D87 /* OWEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWEndpoint.swift; sourceTree = "<group>"; };
 		D04FBA442AE6BE2D00481D87 /* OWClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OWClient.swift; sourceTree = "<group>"; };
 		D04FBA472AE6C78800481D87 /* CurrentWeatherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentWeatherView.swift; sourceTree = "<group>"; };
+		D0B5E95A2AE7FF5F00E0ECD4 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +63,7 @@
 		D04FBA0B2AE6969B00481D87 = {
 			isa = PBXGroup;
 			children = (
+				D0B5E95A2AE7FF5F00E0ECD4 /* README.md */,
 				D04FBA162AE6969B00481D87 /* Forecast */,
 				D04FBA152AE6969B00481D87 /* Products */,
 			);
@@ -81,12 +83,11 @@
 				D04FBA172AE6969B00481D87 /* AppDelegate.swift */,
 				D04FBA192AE6969B00481D87 /* SceneDelegate.swift */,
 				D04FBA1B2AE6969B00481D87 /* WeatherViewController.swift */,
-				D04FBA472AE6C78800481D87 /* CurrentWeatherView.swift */,
 				D04FBA3D2AE69E4000481D87 /* Views */,
 				D04FBA362AE6984400481D87 /* ViewModel */,
 				D04FBA462AE6BE4E00481D87 /* Networking */,
-				D04FBA1D2AE6969B00481D87 /* Main.storyboard */,
 				D04FBA2F2AE6977F00481D87 /* Model */,
+				D04FBA1D2AE6969B00481D87 /* Main.storyboard */,
 				D04FBA202AE6969C00481D87 /* Assets.xcassets */,
 				D04FBA222AE6969C00481D87 /* LaunchScreen.storyboard */,
 				D04FBA252AE6969C00481D87 /* Info.plist */,
@@ -116,6 +117,7 @@
 		D04FBA3D2AE69E4000481D87 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D04FBA472AE6C78800481D87 /* CurrentWeatherView.swift */,
 				D04FBA372AE6987F00481D87 /* ForecastCell.swift */,
 				D04FBA392AE698AF00481D87 /* ForecastCell.xib */,
 			);

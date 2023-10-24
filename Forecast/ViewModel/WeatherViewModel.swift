@@ -19,12 +19,12 @@ public class WeatherViewModel: ObservableObject {
     @Published var error: OWError?
     
     private let client = OWClient()
-    private lazy var geocoder = CLGeocoder()
+    private let geocoder = CLGeocoder()
     private var defaultLocation: CLLocation = .init()
     
-    init() {
-        if let loadedLocation = UserDefaults.standard.data(forKey: "savedLocation"),
-           let decodedLocation = try? NSKeyedUnarchiver.unarchivedObject(ofClass: CLLocation.self, from: loadedLocation) {
+    init() { // Loads last saved location if there is one
+        if let lastSavedLocation = UserDefaults.standard.data(forKey: "savedLocation"),
+           let decodedLocation = try? NSKeyedUnarchiver.unarchivedObject(ofClass: CLLocation.self, from: lastSavedLocation) {
             Task {
                 self.defaultLocation = decodedLocation
                 try await fetchCurrentWeather(fromLocation: decodedLocation)
@@ -43,14 +43,18 @@ public class WeatherViewModel: ObservableObject {
                 }
             }
         } catch {
-            print(error.localizedDescription)
+            self.error = .locationNotFound
         }
     }
     
-    func geocode(location: String) async throws -> CLPlacemark? {
-        let placemarks = try await geocoder.geocodeAddressString(location)
-        if let placemark = placemarks.first {
-            return placemark
+    private func geocode(location: String) async throws -> CLPlacemark? {
+        do {
+            let placemarks = try await geocoder.geocodeAddressString(location)
+            if let placemark = placemarks.first {
+                return placemark
+            }
+        } catch {
+            throw OWError.locationNotFound
         }
         return nil
     }
@@ -81,7 +85,7 @@ public class WeatherViewModel: ObservableObject {
                 self.humidity = "Humidity: \(roundedHumidity)%"
                 
             } catch {
-                self.error = OWError.invalidURL
+                self.error = OWError.locationNotFound
             }
         }
     }
@@ -93,7 +97,7 @@ public class WeatherViewModel: ObservableObject {
             do {
                 self.forecasts = try await self.client.getTenDayForecast(in: city)
             } catch {
-                self.error = OWError.invalidURL
+                self.error = OWError.locationNotFound
             }
         }
         return []
