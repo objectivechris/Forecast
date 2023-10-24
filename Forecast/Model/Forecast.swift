@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct Forecasts: Codable {
+struct Forecasts: Decodable {
     var list: [Forecast]
 }
 
-struct Forecast: Codable {
+struct Forecast: Decodable {
     let weekday: TimeInterval
     let temp: Temperature
     let pressure: Double
@@ -31,7 +31,7 @@ struct Forecast: Codable {
     }
 }
 
-struct Temperature: Codable {
+struct Temperature: Decodable {
     let low: Double
     let high: Double
     

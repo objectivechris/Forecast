@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CurrentWeather: Codable {
+struct CurrentWeather: Decodable {
     let details: [WeatherDetails]
     let main: Main
     
@@ -17,12 +17,12 @@ struct CurrentWeather: Codable {
     }
 }
 
-struct Main: Codable {
+struct Main: Decodable {
     let temp: Double
     let humidity: Double
 }
 
-struct WeatherDetails: Codable {
+struct WeatherDetails: Decodable {
     let main: String
     let description: String
     let icon: String
