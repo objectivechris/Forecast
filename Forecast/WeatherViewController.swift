@@ -71,7 +71,9 @@ class WeatherViewController: UIViewController {
     }
     
     @IBSegueAction func embedSwiftUIView(_ coder: NSCoder) -> UIViewController? {
-        return UIHostingController(coder: coder, rootView: CurrentWeatherView(viewModel: self.viewModel))
+        let currentWeatherVC = UIHostingController(coder: coder, rootView: CurrentWeatherView(viewModel: self.viewModel))
+        currentWeatherVC?.view.backgroundColor = .clear
+        return currentWeatherVC
     }
     
     private func showAlert(title: String = "Uh Oh", message: String) {
