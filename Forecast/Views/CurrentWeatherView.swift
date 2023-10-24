@@ -16,12 +16,19 @@ struct CurrentWeatherView: View {
             
             Text(viewModel.cityName)
                 .font(.custom("ArialRoundedMTBold", size: 44.0))
-           
+            
             HStack(spacing: 0) {
-                Image(viewModel.icon)
-                    .resizable()
-                    .frame(width: 50, height: 50)
-                    .shadow(radius: 10)
+                AsyncImage(url: viewModel.iconURL) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image.resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(maxWidth: 50, maxHeight: 50)
+                            .shadow(radius: 10)
+                    default:
+                        EmptyView()
+                    }
+                }
                 
                 Text(viewModel.description)
                     .font(.custom("ArialRoundedMTBold", size: 20))

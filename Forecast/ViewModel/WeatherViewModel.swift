@@ -14,7 +14,7 @@ public class WeatherViewModel: ObservableObject {
     @Published var description: String = ""
     @Published var temperature: String = ""
     @Published var humidity: String = ""
-    @Published var icon: String = ""
+    @Published var iconURL: URL?
     @Published var forecasts: [Forecast] = []
     @Published var error: OWError?
     
@@ -69,7 +69,7 @@ public class WeatherViewModel: ObservableObject {
                 
                 self.cityName = "\(city), \(state)"
                 if let icon = currentWeather.details.first?.icon {
-                    self.icon = icon
+                    self.iconURL = URL(string: "https://openweathermap.org/img/wn/\(icon)@2x.png")
                 }
                 
                 if let description = currentWeather.details.first?.description {
