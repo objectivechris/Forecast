@@ -17,6 +17,7 @@ public class WeatherViewModel: ObservableObject {
     @Published var iconURL: URL?
     @Published var forecasts: [Forecast] = []
     @Published var error: OWError?
+    @Published var isFetching: Bool = false
     
     private let client = OWClient()
     private let geocoder = CLGeocoder()
@@ -65,11 +66,14 @@ public class WeatherViewModel: ObservableObject {
             return
         }
         
+        isFetching = true
+        
         let placemarks = try await geocoder.reverseGeocodeLocation(location)
         if let placemark = placemarks.first, let city = placemark.locality, let state = placemark.administrativeArea {
             do {
                 let currentWeather = try await self.client.getCurrentWeather(in: city)
                 self.forecasts = try await self.client.getTenDayForecast(in: city)
+                self.isFetching = false
                 
                 self.cityName = "\(city), \(state)"
                 if let icon = currentWeather.details.first?.icon {

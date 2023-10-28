@@ -1,4 +1,4 @@
-#  Chase iOS Take Home Assigment
+#  Chase iOS Take Home Assignment
 
 This is a weather app powered by OpenWeather API
 

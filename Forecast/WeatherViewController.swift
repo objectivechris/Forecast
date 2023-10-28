@@ -27,12 +27,6 @@ class WeatherViewController: UIViewController {
         return manager
     }()
     
-    private var activityIndicator: UIActivityIndicatorView = {
-        let view = UIActivityIndicatorView(style: .medium)
-        view.hidesWhenStopped = true
-        return view
-    }()
-    
     private let viewModel = WeatherViewModel()
     private var dataSource: UITableViewDiffableDataSource<Int, Forecast>?
     private var forecasts = [Forecast]() {
@@ -47,8 +41,6 @@ class WeatherViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UINib(nibName: "ForecastCell", bundle: nil), forCellReuseIdentifier: "ForecastCell")
-        tableView.backgroundView = activityIndicator
-        activityIndicator.startAnimating()
         
         dataSource = UITableViewDiffableDataSource<Int, Forecast>(tableView: tableView) { (tableView, indexPath, forecast) -> ForecastCell? in
             let cell = tableView.dequeueReusableCell(withIdentifier: "ForecastCell", for: indexPath) as! ForecastCell
