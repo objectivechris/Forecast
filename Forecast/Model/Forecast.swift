@@ -11,7 +11,7 @@ struct Forecasts: Decodable {
     var list: [Forecast]
 }
 
-struct Forecast: Decodable {
+struct Forecast: Decodable, Hashable {
     let weekday: TimeInterval
     let temp: Temperature
     let pressure: Double
@@ -26,6 +26,14 @@ struct Forecast: Decodable {
         case humidity
         case windSpeed = "speed"
         case weatherDetails = "weather"
+    }
+    
+    static func == (lhs: Forecast, rhs: Forecast) -> Bool {
+        lhs.weekday == rhs.weekday
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(weekday)
     }
 }
 

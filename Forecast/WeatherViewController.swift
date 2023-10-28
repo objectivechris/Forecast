@@ -32,19 +32,28 @@ class WeatherViewController: UIViewController {
         return view
     }()
     
+    private let viewModel = WeatherViewModel()
+    private var dataSource: UITableViewDiffableDataSource<Int, Forecast>?
     private var forecasts = [Forecast]() {
         didSet {
-            tableView.reloadData()
+            var snapshot = NSDiffableDataSourceSnapshot<Int, Forecast>()
+            snapshot.appendSections([1])
+            snapshot.appendItems(forecasts)
+            dataSource?.apply(snapshot, animatingDifferences: true, completion: nil)
         }
     }
-    
-    private let viewModel = WeatherViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UINib(nibName: "ForecastCell", bundle: nil), forCellReuseIdentifier: "ForecastCell")
         tableView.backgroundView = activityIndicator
         activityIndicator.startAnimating()
+        
+        dataSource = UITableViewDiffableDataSource<Int, Forecast>(tableView: tableView) { (tableView, indexPath, forecast) -> ForecastCell? in
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ForecastCell", for: indexPath) as! ForecastCell
+            cell.configure(with: ForecastViewModel(forecast: forecast))
+            return cell
+        }
         
         if locationManager.authorizationStatus == .notDetermined {
             locationManager.requestWhenInUseAuthorization()
@@ -57,6 +66,7 @@ class WeatherViewController: UIViewController {
         viewModel.$forecasts
             .receive(on: RunLoop.main)
             .sink { [weak self] forecasts in
+                self?.forecasts = []
                 self?.forecasts = forecasts
             }
             .store(in: &subscriptions)
@@ -101,16 +111,7 @@ extension WeatherViewController: UITextFieldDelegate {
     }
 }
 
-extension WeatherViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return forecasts.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ForecastCell", for: indexPath) as! ForecastCell
-        cell.configure(with: ForecastViewModel(forecast: forecasts[indexPath.row]))
-        return cell
-    }
+extension WeatherViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return (indexPath.row == selectedRowIndex && expanded) ? 120 : 55
