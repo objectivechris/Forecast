@@ -20,9 +20,9 @@ enum OWEndpoint {
         
         switch self {
         case .currentWeather(let city):
-            endpoint = "weather?q=\(city)&units=imperial&apiKey=\(apiKey)"
+            endpoint = "weather?q=\(city)&units=imperial&appid=\(apiKey)"
         case .tenDayForecast(let city):
-            endpoint = "forecast/daily?q=\(city)&cnt=10&units=imperial&apikey=\(apiKey)"
+            endpoint = "forecast/daily?q=\(city)&cnt=10&units=imperial&appid=\(apiKey)"
         }
         
         return baseURL + endpoint

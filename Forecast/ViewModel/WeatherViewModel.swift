@@ -60,7 +60,7 @@ public class WeatherViewModel: ObservableObject {
     }
     
     func fetchCurrentWeather(fromLocation location: CLLocation?) async throws {
-        guard let location = location else { return }
+        guard let location else { return }
         let placemarks = try await geocoder.reverseGeocodeLocation(location)
         if let placemark = placemarks.first, let city = placemark.locality, let state = placemark.administrativeArea {
             do {
@@ -91,7 +91,7 @@ public class WeatherViewModel: ObservableObject {
     }
     
     private func fetchTenDayForecast(fromLocation location: CLLocation?) async throws -> [Forecast] {
-        guard let location = location else { return [] }
+        guard let location else { return [] }
         let placemarks = try await geocoder.reverseGeocodeLocation(location)
         if let placemark = placemarks.first, let city = placemark.locality {
             do {

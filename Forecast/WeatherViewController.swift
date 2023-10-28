@@ -70,6 +70,10 @@ class WeatherViewController: UIViewController {
             .store(in: &subscriptions)
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        textField.isHidden = (UIDevice.current.orientation.isLandscape) ? true : false
+    }
+    
     @IBSegueAction func embedSwiftUIView(_ coder: NSCoder) -> UIViewController? {
         let currentWeatherVC = UIHostingController(coder: coder, rootView: CurrentWeatherView(viewModel: self.viewModel))
         currentWeatherVC?.view.backgroundColor = .clear

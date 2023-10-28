@@ -24,7 +24,7 @@ struct CurrentWeatherView: View {
                         image.resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(maxWidth: 50, maxHeight: 50)
-                            .shadow(radius: 10)
+                            .shadow(radius: 5)
                     default:
                         EmptyView()
                     }
