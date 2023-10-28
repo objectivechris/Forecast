@@ -60,7 +60,11 @@ public class WeatherViewModel: ObservableObject {
     }
     
     func fetchCurrentWeather(fromLocation location: CLLocation?) async throws {
-        guard let location else { return }
+        guard let location else {
+            self.error = OWError.locationNotFound
+            return
+        }
+        
         let placemarks = try await geocoder.reverseGeocodeLocation(location)
         if let placemark = placemarks.first, let city = placemark.locality, let state = placemark.administrativeArea {
             do {

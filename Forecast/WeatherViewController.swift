@@ -12,6 +12,7 @@ import SwiftUI
 
 class WeatherViewController: UIViewController {
     
+    @IBOutlet weak var locateMeButton: UIBarButtonItem!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var tableView: UITableView!
     
@@ -83,12 +84,19 @@ class WeatherViewController: UIViewController {
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         textField.resignFirstResponder()
         textField.isHidden = (UIDevice.current.orientation.isLandscape) ? true : false
+        locateMeButton.isHidden = (UIDevice.current.orientation.isLandscape) ? true : false
     }
     
     @IBSegueAction func embedSwiftUIView(_ coder: NSCoder) -> UIViewController? {
         let currentWeatherVC = UIHostingController(coder: coder, rootView: CurrentWeatherView(viewModel: self.viewModel))
         currentWeatherVC?.view.backgroundColor = .clear
         return currentWeatherVC
+    }
+    
+    @IBAction func locateMe(_ sender: Any) {
+        Task {
+            try await self.viewModel.fetchCurrentWeather(fromLocation: locationManager.location)
+        }
     }
     
     private func showAlert(title: String = "Uh Oh", message: String) {
