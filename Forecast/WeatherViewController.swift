@@ -71,6 +71,7 @@ class WeatherViewController: UIViewController {
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        textField.resignFirstResponder()
         textField.isHidden = (UIDevice.current.orientation.isLandscape) ? true : false
     }
     
