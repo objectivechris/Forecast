@@ -90,10 +90,15 @@ class WeatherViewController: UIViewController {
     @IBSegueAction func embedSwiftUIView(_ coder: NSCoder) -> UIViewController? {
         let currentWeatherVC = UIHostingController(coder: coder, rootView: CurrentWeatherView(viewModel: self.viewModel))
         currentWeatherVC?.view.backgroundColor = .clear
+        currentWeatherVC?.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(hideKeyboard)))
         return currentWeatherVC
     }
     
-    @IBAction func locateMe(_ sender: Any) {
+    @objc private func hideKeyboard() {
+        textField.resignFirstResponder()
+    }
+    
+    @IBAction private func locateMe(_ sender: Any) {
         Task {
             try await self.viewModel.fetchCurrentWeather(fromLocation: locationManager.location)
         }
