@@ -18,7 +18,7 @@ class ForecastCell: UITableViewCell {
     @IBOutlet weak var windSpeedLabel: UILabel!
     @IBOutlet weak var tempImageView: UIImageView!
     
-    let gray = UIColor(displayP3Red: 243/255, green: 244/255, blue: 246/255, alpha: 1.0)
+    private let gray = UIColor(displayP3Red: 243/255, green: 244/255, blue: 246/255, alpha: 1.0)
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)

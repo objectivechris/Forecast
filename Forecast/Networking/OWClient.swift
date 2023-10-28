@@ -31,7 +31,7 @@ class OWClient {
 private extension OWClient {
     // Decodes types that only conform to Decodable
     func request<ResponseType: Decodable>(url: URL?, responseType: ResponseType.Type) async throws -> ResponseType {
-        guard let url = url else { throw OWError.invalidURL }
+        guard let url else { throw OWError.invalidURL }
         let urlRequest = URLRequest(url: url)
         
         do {

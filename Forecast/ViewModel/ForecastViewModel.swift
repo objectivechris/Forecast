@@ -9,14 +9,14 @@ import Foundation
 
 public class ForecastViewModel {
     
-    var dayOftheWeek: String = ""
-    var description: String = ""
-    var windSpeed: String = ""
-    var highTemp: String = ""
-    var lowTemp: String = ""
-    var humidity: String = ""
-    var pressure: String = ""
-    var iconURL: URL = URL(string: "www.example.com")!
+    let dayOftheWeek: String
+    let description: String
+    let windSpeed: String
+    let highTemp: String
+    let lowTemp: String
+    let humidity: String
+    let pressure: String
+    let iconURL: URL
     
     init(forecast: Forecast) {
         
@@ -33,12 +33,8 @@ public class ForecastViewModel {
         let weekday = formatter.string(from: date)
         self.dayOftheWeek = weekday
         
-        // Helper
-        let directions = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
-        let i = Int((forecast.windDirection + 11.25)/22.5)
-        let direction = directions[i % 16]
         let speed = Int(forecast.windSpeed)
-        self.windSpeed = "\(speed) m/h \(direction)"
+        self.windSpeed = "\(speed) mph"
         
         let roundedHighTemp = Int(forecast.temp.high)
         self.highTemp = "\(roundedHighTemp)º"

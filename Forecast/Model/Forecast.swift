@@ -17,7 +17,6 @@ struct Forecast: Decodable {
     let pressure: Double
     let humidity: Double
     let windSpeed: Double
-    let windDirection: Double
     let weatherDetails: [WeatherDetails]
     
     enum CodingKeys: String, CodingKey {
@@ -26,7 +25,6 @@ struct Forecast: Decodable {
         case pressure
         case humidity
         case windSpeed = "speed"
-        case windDirection = "deg"
         case weatherDetails = "weather"
     }
 }

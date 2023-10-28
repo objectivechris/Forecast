@@ -12,8 +12,8 @@ import SwiftUI
 
 class WeatherViewController: UIViewController {
     
-    @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var tableView: UITableView!
     
     private var expanded = false
     private var selectedRowIndex: Int?
@@ -38,7 +38,7 @@ class WeatherViewController: UIViewController {
         }
     }
     
-    let viewModel = WeatherViewModel()
+    private let viewModel = WeatherViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
