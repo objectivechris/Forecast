@@ -51,7 +51,7 @@ public class WeatherViewModel: ObservableObject {
     
     func fetchCurrentWeather(fromLocation location: CLLocation?) async throws {
         guard let location else {
-            self.error = OWError.locationNotFound
+            error = OWError.locationNotFound
             return
         }
         

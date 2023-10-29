@@ -92,9 +92,7 @@ class WeatherViewController: UIViewController {
     }
     
     @IBAction private func locateMe(_ sender: Any) {
-        Task {
-            try await self.viewModel.fetchCurrentWeather(fromLocation: locationManager.location)
-        }
+        fetchCurrentWeather(fromLocation: locationManager.location)
         textField.resignFirstResponder()
     }
     
@@ -103,12 +101,18 @@ class WeatherViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
     }
+    
+    private func fetchCurrentWeather(fromLocation location: CLLocation?) {
+        Task {
+            try await viewModel.fetchCurrentWeather(fromLocation: location)
+        }
+    }
 }
 
 extension WeatherViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         Task {
-            await self.viewModel.changeLocation(to: textField.text ?? "")
+            await viewModel.changeLocation(to: textField.text ?? "")
             textField.text = nil
         }
         
@@ -134,8 +138,8 @@ extension WeatherViewController: UITableViewDelegate {
             selectedRowIndex = nil
             tableView.deselectRow(at: indexPath, animated: true)
         }
-        self.tableView.beginUpdates()
-        self.tableView.endUpdates()
+        tableView.beginUpdates()
+        tableView.endUpdates()
     }
 }
 
@@ -144,9 +148,7 @@ extension WeatherViewController: CLLocationManagerDelegate {
         switch manager.authorizationStatus {
         case .notDetermined: manager.requestWhenInUseAuthorization()
         case .authorizedWhenInUse:
-            Task {
-                try await viewModel.fetchCurrentWeather(fromLocation: manager.location)
-            }
+            fetchCurrentWeather(fromLocation: manager.location)
         default:
             showAlert(message: "Please check your location permissions in Settings.")
             tableView.reloadData()
@@ -154,9 +156,7 @@ extension WeatherViewController: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        Task {
-            try await viewModel.fetchCurrentWeather(fromLocation: manager.location)
-        }
+        fetchCurrentWeather(fromLocation: manager.location)
         manager.stopUpdatingLocation()
     }
     
