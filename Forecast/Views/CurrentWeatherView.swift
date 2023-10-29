@@ -18,7 +18,7 @@ struct CurrentWeatherView: View {
         } else {
             VStack(spacing: 10) {
                 
-                Text(viewModel.cityName)
+                Text(viewModel.city)
                     .font(.custom("ArialRoundedMTBold", size: 44.0))
                 
                 HStack(spacing: 0) {

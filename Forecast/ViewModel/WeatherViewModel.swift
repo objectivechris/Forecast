@@ -8,9 +8,11 @@
 import CoreLocation
 import Foundation
 
+typealias Location = CLLocationCoordinate2D
+
 @MainActor
 public class WeatherViewModel: ObservableObject {
-    @Published var cityName: String = ""
+    @Published var city: String = ""
     @Published var description: String = ""
     @Published var temperature: String = ""
     @Published var humidity: String = ""
@@ -35,9 +37,8 @@ public class WeatherViewModel: ObservableObject {
     
     func changeLocation(to newLocation: String) async {
         do {
-            if let placemark = try await geocode(location: newLocation), let city = placemark.name, let state = placemark.administrativeArea {
+            if let placemark = try await geocode(location: newLocation) {
                 try await fetchCurrentWeather(fromLocation: placemark.location)
-                cityName = "\(city), \(state)"
                 
                 if let encodedLocation = try? NSKeyedArchiver.archivedData(withRootObject: placemark.location ?? defaultLocation, requiringSecureCoding: false) {
                     UserDefaults.standard.set(encodedLocation, forKey: "savedLocation")
@@ -69,13 +70,15 @@ public class WeatherViewModel: ObservableObject {
         isFetching = true
         
         let placemarks = try await geocoder.reverseGeocodeLocation(location)
-        if let placemark = placemarks.first, let city = placemark.locality, let state = placemark.administrativeArea {
+        if let placemark = placemarks.first,
+            let coordinate = placemark.location?.coordinate,
+            let city = placemark.locality {
             do {
-                let currentWeather = try await self.client.getCurrentWeather(in: city)
-                self.forecasts = try await self.client.getTenDayForecast(in: city)
+                let currentWeather = try await self.client.getCurrentWeather(for: coordinate)
+                self.forecasts = try await self.client.getMultiDayForecast(for: coordinate)
                 self.isFetching = false
                 
-                self.cityName = "\(city), \(state)"
+                self.city = city
                 if let icon = currentWeather.details.first?.icon {
                     self.iconURL = URL(string: "https://openweathermap.org/img/wn/\(icon)@2x.png")
                 }
@@ -96,18 +99,5 @@ public class WeatherViewModel: ObservableObject {
                 self.error = OWError.locationNotFound
             }
         }
-    }
-    
-    private func fetchTenDayForecast(fromLocation location: CLLocation?) async throws -> [Forecast] {
-        guard let location else { return [] }
-        let placemarks = try await geocoder.reverseGeocodeLocation(location)
-        if let placemark = placemarks.first, let city = placemark.locality {
-            do {
-                self.forecasts = try await self.client.getTenDayForecast(in: city)
-            } catch {
-                self.error = OWError.locationNotFound
-            }
-        }
-        return []
     }
 }

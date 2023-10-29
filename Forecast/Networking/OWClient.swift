@@ -19,12 +19,12 @@ class OWClient {
         self.init(configuration: .default)
     }
     
-    func getCurrentWeather(in city: String) async throws -> CurrentWeather {
-        return try await request(url: OWEndpoint.currentWeather(city).url, responseType: CurrentWeather.self)
+    func getCurrentWeather(for location: Location) async throws -> CurrentWeather {
+        return try await request(url: OWEndpoint.currentWeather(location.latitude, location.longitude).url, responseType: CurrentWeather.self)
     }
     
-    func getTenDayForecast(in city: String) async throws -> [Forecast] {
-        return try await request(url: OWEndpoint.tenDayForecast(city).url, responseType: Forecasts.self).list
+    func getMultiDayForecast(for location: Location) async throws -> [Forecast] {
+        return try await request(url: OWEndpoint.multiDayForecast(location.latitude, location.longitude).url, responseType: Forecasts.self).list
     }
 }
 

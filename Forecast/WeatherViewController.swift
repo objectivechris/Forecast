@@ -34,7 +34,7 @@ class WeatherViewController: UIViewController {
             var snapshot = NSDiffableDataSourceSnapshot<Int, Forecast>()
             snapshot.appendSections([1])
             snapshot.appendItems(forecasts)
-            dataSource?.apply(snapshot, animatingDifferences: true, completion: nil)
+            dataSource?.apply(snapshot, animatingDifferences: true)
         }
     }
     
@@ -94,6 +94,7 @@ class WeatherViewController: UIViewController {
         Task {
             try await self.viewModel.fetchCurrentWeather(fromLocation: locationManager.location)
         }
+        textField.resignFirstResponder()
     }
     
     private func showAlert(title: String = "Uh Oh", message: String) {
@@ -137,7 +138,6 @@ extension WeatherViewController: UITableViewDelegate {
     }
 }
 
-
 extension WeatherViewController: CLLocationManagerDelegate {
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         switch manager.authorizationStatus {
@@ -153,9 +153,8 @@ extension WeatherViewController: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = manager.location else { return }
         Task {
-            try await viewModel.fetchCurrentWeather(fromLocation: location)
+            try await viewModel.fetchCurrentWeather(fromLocation: manager.location)
         }
         manager.stopUpdatingLocation()
     }
