@@ -23,13 +23,11 @@ public class WeatherViewModel: ObservableObject {
     
     private let client = OWClient()
     private let geocoder = CLGeocoder()
-    private var defaultLocation: CLLocation = .init()
     
     init() { // Loads last saved location if there is one
         if let lastSavedLocation = UserDefaults.standard.data(forKey: "savedLocation"),
            let decodedLocation = try? NSKeyedUnarchiver.unarchivedObject(ofClass: CLLocation.self, from: lastSavedLocation) {
             Task {
-                self.defaultLocation = decodedLocation
                 try await fetchCurrentWeather(fromLocation: decodedLocation)
             }
         }
@@ -37,28 +35,18 @@ public class WeatherViewModel: ObservableObject {
     
     func changeLocation(to newLocation: String) async {
         do {
-            if let placemark = try await geocode(location: newLocation) {
+            if let placemark = try await geocoder.geocodeAddressString(newLocation).first {
                 try await fetchCurrentWeather(fromLocation: placemark.location)
-                
-                if let encodedLocation = try? NSKeyedArchiver.archivedData(withRootObject: placemark.location ?? defaultLocation, requiringSecureCoding: false) {
-                    UserDefaults.standard.set(encodedLocation, forKey: "savedLocation")
-                }
             }
         } catch {
             self.error = .locationNotFound
         }
     }
     
-    private func geocode(location: String) async throws -> CLPlacemark? {
-        do {
-            let placemarks = try await geocoder.geocodeAddressString(location)
-            if let placemark = placemarks.first {
-                return placemark
-            }
-        } catch {
-            throw OWError.locationNotFound
+    private func saveLocation(_ location: CLLocation) {
+        if let encodedLocation = try? NSKeyedArchiver.archivedData(withRootObject: location, requiringSecureCoding: false) {
+            UserDefaults.standard.set(encodedLocation, forKey: "savedLocation")
         }
-        return nil
     }
     
     func fetchCurrentWeather(fromLocation location: CLLocation?) async throws {
@@ -71,11 +59,12 @@ public class WeatherViewModel: ObservableObject {
         
         let placemarks = try await geocoder.reverseGeocodeLocation(location)
         if let placemark = placemarks.first,
-            let coordinate = placemark.location?.coordinate,
+            let location = placemark.location,
             let city = placemark.locality {
             do {
-                let currentWeather = try await self.client.getCurrentWeather(for: coordinate)
-                self.forecasts = try await self.client.getMultiDayForecast(for: coordinate)
+                let currentWeather = try await self.client.getCurrentWeather(for: location.coordinate)
+                self.forecasts = try await self.client.getMultiDayForecast(for: location.coordinate)
+                self.saveLocation(location)
                 self.isFetching = false
                 
                 self.city = city
@@ -94,7 +83,6 @@ public class WeatherViewModel: ObservableObject {
                 
                 let roundedHumidity = Int(currentWeather.main.humidity)
                 self.humidity = "Humidity: \(roundedHumidity)%"
-                
             } catch {
                 self.error = OWError.locationNotFound
             }

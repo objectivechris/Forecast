@@ -59,6 +59,7 @@ class WeatherViewController: UIViewController {
         viewModel.$forecasts
             .receive(on: RunLoop.main)
             .sink { [weak self] forecasts in
+                self?.expanded = false
                 self?.forecasts = []
                 self?.forecasts = forecasts
             }
