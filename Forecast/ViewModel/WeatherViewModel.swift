@@ -18,8 +18,10 @@ public class WeatherViewModel: ObservableObject {
     @Published var humidity: String = ""
     @Published var iconURL: URL?
     @Published var forecasts: [Forecast] = []
+    @Published var unit: Unit = .imperial
     @Published var error: OWError?
     @Published var isFetching: Bool = false
+    @Published var placemark: CLPlacemark?
     
     private let client = OWClient()
     private let geocoder = CLGeocoder()
@@ -28,18 +30,8 @@ public class WeatherViewModel: ObservableObject {
         if let lastSavedLocation = UserDefaults.standard.data(forKey: "savedLocation"),
            let decodedLocation = try? NSKeyedUnarchiver.unarchivedObject(ofClass: CLLocation.self, from: lastSavedLocation) {
             Task {
-                try await fetchCurrentWeather(fromLocation: decodedLocation)
+                try await fetchCurrentWeather(fromLocation: decodedLocation, unit: unit)
             }
-        }
-    }
-    
-    func changeLocation(to newLocation: String) async {
-        do {
-            if let placemark = try await geocoder.geocodeAddressString(newLocation).first {
-                try await fetchCurrentWeather(fromLocation: placemark.location)
-            }
-        } catch {
-            self.error = .locationNotFound
         }
     }
     
@@ -49,25 +41,35 @@ public class WeatherViewModel: ObservableObject {
         }
     }
     
-    func fetchCurrentWeather(fromLocation location: CLLocation?) async throws {
+    func changeLocation(to newLocation: String) async {
+        do {
+            if let placemark = try await geocoder.geocodeAddressString(newLocation).first {
+                try await fetchCurrentWeather(fromLocation: placemark.location, unit: unit)
+            }
+        } catch {
+            self.error = .locationNotFound
+        }
+    }
+    
+    func fetchCurrentWeather(fromLocation location: CLLocation?, unit: Unit) async throws {
         guard let location else {
             error = OWError.locationNotFound
             return
         }
         
-        isFetching = true
+        self.isFetching = true
+        self.unit = unit
         
         let placemarks = try await geocoder.reverseGeocodeLocation(location)
-        if let placemark = placemarks.first,
-            let location = placemark.location,
-            let city = placemark.locality {
+        if let placemark = placemarks.first, let location = placemark.location {
             do {
-                let currentWeather = try await self.client.getCurrentWeather(for: location.coordinate)
-                self.forecasts = try await self.client.getMultiDayForecast(for: location.coordinate)
+                let currentWeather = try await self.client.getCurrentWeather(for: location.coordinate, unit: unit)
+                self.forecasts = try await self.client.getMultiDayForecast(for: location.coordinate, unit: unit)
                 self.saveLocation(location)
+                self.placemark = placemark
                 self.isFetching = false
                 
-                self.city = city
+                self.city = placemark.locality ?? placemark.country ?? "Unknown City"
                 if let icon = currentWeather.details.first?.icon {
                     self.iconURL = URL(string: "https://openweathermap.org/img/wn/\(icon)@2x.png")
                 }
@@ -83,6 +85,7 @@ public class WeatherViewModel: ObservableObject {
                 
                 let roundedHumidity = Int(currentWeather.main.humidity)
                 self.humidity = "Humidity: \(roundedHumidity)%"
+                
             } catch {
                 self.error = OWError.locationNotFound
             }

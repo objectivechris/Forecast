@@ -12,17 +12,17 @@ fileprivate let apiKey = "3aa158b2f14a9f493a8c725f8133d704"
 enum OWEndpoint {
     private var baseURL: String { "https://api.openweathermap.org/data/2.5/" }
     
-    case currentWeather(Double, Double)
-    case multiDayForecast(Double, Double)
+    case currentWeather(Location, Unit)
+    case multiDayForecast(Location, Unit)
     
     private var path: String {
         var endpoint: String
         
         switch self {
-        case .currentWeather(let lat, let lon):
-            endpoint = "weather?lat=\(lat)&lon=\(lon)&units=imperial&appid=\(apiKey)"
-        case .multiDayForecast(let lat, let lon):
-            endpoint = "forecast/daily?lat=\(lat)&lon=\(lon)&cnt=16&units=imperial&appid=\(apiKey)"
+        case .currentWeather(let location, let unit):
+            endpoint = "weather?lat=\(location.latitude)&lon=\(location.longitude)&units=\(unit.rawValue)&appid=\(apiKey)"
+        case .multiDayForecast(let location, let unit):
+            endpoint = "forecast/daily?lat=\(location.latitude)&lon=\(location.longitude)&cnt=16&units=\(unit.rawValue)&appid=\(apiKey)"
         }
         
         return baseURL + endpoint

@@ -30,6 +30,7 @@
 		D0B5E96E2AE81E9B00E0ECD4 /* CurrentWeatherData.json in Resources */ = {isa = PBXBuildFile; fileRef = D0B5E96D2AE81E9B00E0ECD4 /* CurrentWeatherData.json */; };
 		D0B5E96F2AE820DB00E0ECD4 /* CurrentWeatherData.json in Resources */ = {isa = PBXBuildFile; fileRef = D0B5E96D2AE81E9B00E0ECD4 /* CurrentWeatherData.json */; };
 		D0B5E9702AE820DE00E0ECD4 /* ForecastData.json in Resources */ = {isa = PBXBuildFile; fileRef = D0B5E95D2AE817B300E0ECD4 /* ForecastData.json */; };
+		D0D3A5822AEF32850000FDC0 /* Unit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0D3A5812AEF32850000FDC0 /* Unit.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +69,7 @@
 		D0B5E9632AE8191100E0ECD4 /* ForecastTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ForecastTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0B5E9652AE8191100E0ECD4 /* ForecastTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForecastTests.swift; sourceTree = "<group>"; };
 		D0B5E96D2AE81E9B00E0ECD4 /* CurrentWeatherData.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = CurrentWeatherData.json; sourceTree = "<group>"; };
+		D0D3A5812AEF32850000FDC0 /* Unit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Unit.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,6 +133,7 @@
 			children = (
 				D04FBA2B2AE6974800481D87 /* Forecast.swift */,
 				D04FBA2D2AE6976D00481D87 /* CurrentWeather.swift */,
+				D0D3A5812AEF32850000FDC0 /* Unit.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -284,6 +287,7 @@
 				D04FBA3C2AE69ADA00481D87 /* UIImageView+Extension.swift in Sources */,
 				D04FBA2C2AE6974800481D87 /* Forecast.swift in Sources */,
 				D04FBA312AE697C700481D87 /* OWError.swift in Sources */,
+				D0D3A5822AEF32850000FDC0 /* Unit.swift in Sources */,
 				D04FBA2E2AE6976D00481D87 /* CurrentWeather.swift in Sources */,
 				D04FBA332AE697EC00481D87 /* ForecastViewModel.swift in Sources */,
 				D04FBA432AE6A9A900481D87 /* OWEndpoint.swift in Sources */,

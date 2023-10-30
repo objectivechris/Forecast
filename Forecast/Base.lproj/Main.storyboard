@@ -75,12 +75,13 @@
                     </view>
                     <navigationItem key="navigationItem" id="POW-Uc-58q">
                         <nil key="title"/>
+                        <barButtonItem key="leftBarButtonItem" title="Fº" width="44" style="done" id="8GB-hb-YdY"/>
                         <textField key="titleView" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Search for a city" textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" id="anZ-tQ-CG5">
-                            <rect key="frame" x="16" y="5" width="318.66666666666669" height="34"/>
+                            <rect key="frame" x="58" y="5" width="276.66666666666669" height="34"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                            <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="yes" spellCheckingType="yes" returnKeyType="search" smartInsertDeleteType="yes" textContentType="name"/>
+                            <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="yes" spellCheckingType="yes" returnKeyType="search" smartInsertDeleteType="yes"/>
                             <userDefinedRuntimeAttributes>
                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                     <integer key="value" value="4"/>
@@ -97,6 +98,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="changeUnitButton" destination="8GB-hb-YdY" id="Yp7-3R-CRb"/>
                         <outlet property="locateMeButton" destination="BDH-KO-3jM" id="Dlh-wv-Lf0"/>
                         <outlet property="tableView" destination="I10-7F-O1H" id="pn3-Ad-b8Q"/>
                         <outlet property="textField" destination="anZ-tQ-CG5" id="k09-WM-XU8"/>
