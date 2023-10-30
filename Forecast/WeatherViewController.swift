@@ -12,6 +12,7 @@ import SwiftUI
 
 class WeatherViewController: UIViewController {
     
+    @IBOutlet weak var unitLabel: UILabel!
     @IBOutlet weak var changeUnitButton: UIBarButtonItem!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var tableView: UITableView!
@@ -46,7 +47,6 @@ class WeatherViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UINib(nibName: "ForecastCell", bundle: nil), forCellReuseIdentifier: "ForecastCell")
-        changeUnitButton.setTitleTextAttributes([NSAttributedString.Key.font : UIFont.systemFont(ofSize: 25)], for: .normal)
         dataSource = UITableViewDiffableDataSource<Int, Forecast>(tableView: tableView) { (tableView, indexPath, forecast) -> ForecastCell? in
             let cell = tableView.dequeueReusableCell(withIdentifier: "ForecastCell", for: indexPath) as! ForecastCell
             cell.configure(with: ForecastViewModel(forecast: forecast))
@@ -82,7 +82,7 @@ class WeatherViewController: UIViewController {
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        textField.resignFirstResponder()
+        hideKeyboard()
         navigationController?.navigationBar.isHidden = (UIDevice.current.orientation.isLandscape) ? true : false
     }
     
@@ -95,11 +95,10 @@ class WeatherViewController: UIViewController {
     
     @IBAction private func locateMe(_ sender: Any) {
         fetchCurrentWeather(fromLocation: locationManager.location)
-        textField.resignFirstResponder()
+        hideKeyboard()
     }
     
-    @objc
-    private func hideKeyboard() {
+    @objc private func hideKeyboard() {
         textField.resignFirstResponder()
     }
     
@@ -125,8 +124,8 @@ class WeatherViewController: UIViewController {
     private func fetchCurrentWeather(fromLocation location: CLLocation?) {
         Task {
             try await viewModel.fetchCurrentWeather(fromLocation: location, unit: unit)
+            self.unitLabel.text = unit.abbreviatedTitle
         }
-        self.changeUnitButton.title = unit.abbreviatedTitle
         self.expanded = false
     }
 }
@@ -138,8 +137,7 @@ extension WeatherViewController: UITextFieldDelegate {
             textField.text = nil
         }
         
-        textField.resignFirstResponder()
-        
+        hideKeyboard()
         return true
     }
 }

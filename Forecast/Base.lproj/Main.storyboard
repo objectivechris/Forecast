@@ -38,11 +38,19 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fº" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="coP-T2-0Dg">
+                                                    <rect key="frame" x="353" y="13.333333333333334" width="20" height="23.333333333333329"/>
+                                                    <fontDescription key="fontDescription" name="ArialRoundedMTBold" family="Arial Rounded MT Bold" pointSize="20"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="0HF-8L-kIy" firstAttribute="centerY" secondItem="fVN-pw-uhZ" secondAttribute="centerY" id="CWc-Nc-sT3"/>
+                                                <constraint firstItem="coP-T2-0Dg" firstAttribute="centerY" secondItem="0HF-8L-kIy" secondAttribute="centerY" id="OtB-3H-Gl2"/>
                                                 <constraint firstItem="0HF-8L-kIy" firstAttribute="leading" secondItem="fVN-pw-uhZ" secondAttribute="leading" constant="15" id="Va0-9N-Uvj"/>
-                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="0HF-8L-kIy" secondAttribute="trailing" constant="20" symbolic="YES" id="hYJ-a2-sqa"/>
+                                                <constraint firstAttribute="trailing" secondItem="coP-T2-0Dg" secondAttribute="trailing" constant="20" id="m4c-LP-Q0t"/>
+                                                <constraint firstItem="coP-T2-0Dg" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="0HF-8L-kIy" secondAttribute="trailing" constant="180" id="t4s-JH-Cul"/>
                                             </constraints>
                                         </view>
                                         <prototypes>
@@ -75,7 +83,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="POW-Uc-58q">
                         <nil key="title"/>
-                        <barButtonItem key="leftBarButtonItem" title="Fº" width="44" style="done" id="8GB-hb-YdY"/>
+                        <barButtonItem key="leftBarButtonItem" image="thermometer.medium" catalog="system" width="44" style="plain" id="8GB-hb-YdY"/>
                         <textField key="titleView" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Search for a city" textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" id="anZ-tQ-CG5">
                             <rect key="frame" x="58" y="5" width="276.66666666666669" height="34"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -101,6 +109,7 @@
                         <outlet property="changeUnitButton" destination="8GB-hb-YdY" id="Yp7-3R-CRb"/>
                         <outlet property="tableView" destination="I10-7F-O1H" id="pn3-Ad-b8Q"/>
                         <outlet property="textField" destination="anZ-tQ-CG5" id="k09-WM-XU8"/>
+                        <outlet property="unitLabel" destination="coP-T2-0Dg" id="Upw-J0-jWr"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -136,5 +145,6 @@
     </scenes>
     <resources>
         <image name="location.fill" catalog="system" width="128" height="119"/>
+        <image name="thermometer.medium" catalog="system" width="80" height="128"/>
     </resources>
 </document>
