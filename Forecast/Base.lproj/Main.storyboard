@@ -99,7 +99,6 @@
                     </navigationItem>
                     <connections>
                         <outlet property="changeUnitButton" destination="8GB-hb-YdY" id="Yp7-3R-CRb"/>
-                        <outlet property="locateMeButton" destination="BDH-KO-3jM" id="Dlh-wv-Lf0"/>
                         <outlet property="tableView" destination="I10-7F-O1H" id="pn3-Ad-b8Q"/>
                         <outlet property="textField" destination="anZ-tQ-CG5" id="k09-WM-XU8"/>
                     </connections>

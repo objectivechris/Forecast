@@ -13,13 +13,17 @@ import SwiftUI
 class WeatherViewController: UIViewController {
     
     @IBOutlet weak var changeUnitButton: UIBarButtonItem!
-    @IBOutlet weak var locateMeButton: UIBarButtonItem!
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var tableView: UITableView!
     
     private var expanded = false
     private var selectedRowIndex: Int?
     private var subscriptions = Set<AnyCancellable>()
+    private var unit: Unit = .imperial {
+        didSet {
+            self.fetchCurrentWeather(fromLocation: viewModel.placemark?.location ?? locationManager.location)
+        }
+    }
     
     private lazy var locationManager: CLLocationManager = {
         let manager = CLLocationManager()
@@ -49,6 +53,8 @@ class WeatherViewController: UIViewController {
             return cell
         }
         
+        self.unit = viewModel.unit
+        
         if locationManager.authorizationStatus == .notDetermined {
             locationManager.requestWhenInUseAuthorization()
         } else if locationManager.authorizationStatus == .authorizedWhenInUse {
@@ -61,7 +67,6 @@ class WeatherViewController: UIViewController {
             .receive(on: RunLoop.main)
             .sink { [weak self] forecasts in
                 self?.reloadMenu()
-                self?.expanded = false
                 self?.forecasts = []
                 self?.forecasts = forecasts
             }
@@ -78,9 +83,7 @@ class WeatherViewController: UIViewController {
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         textField.resignFirstResponder()
-        textField.isHidden = (UIDevice.current.orientation.isLandscape) ? true : false
-        changeUnitButton.isHidden = (UIDevice.current.orientation.isLandscape) ? true : false
-        locateMeButton.isHidden = (UIDevice.current.orientation.isLandscape) ? true : false
+        navigationController?.navigationBar.isHidden = (UIDevice.current.orientation.isLandscape) ? true : false
     }
     
     @IBSegueAction func embedSwiftUIView(_ coder: NSCoder) -> UIViewController? {
@@ -91,7 +94,7 @@ class WeatherViewController: UIViewController {
     }
     
     @IBAction private func locateMe(_ sender: Any) {
-        fetchCurrentWeather(fromLocation: locationManager.location, unit: viewModel.unit)
+        fetchCurrentWeather(fromLocation: locationManager.location)
         textField.resignFirstResponder()
     }
     
@@ -101,8 +104,16 @@ class WeatherViewController: UIViewController {
     }
     
     private func reloadMenu() {
-        let menu = UIMenu(title: "Change Unit", children: [makeFarehnheitAction(), makeCelsiusAction()])
+        let menu = UIMenu(title: "Change Unit", children: [setMenuAction(forUnit: .imperial), setMenuAction(forUnit: .metric)])
         changeUnitButton.menu = menu
+    }
+    
+    private func setMenuAction(forUnit unit: Unit) -> UIAction {
+        let image: UIImage? = (viewModel.unit == unit) ? .init(systemName: "checkmark") : nil
+        let attributes: UIMenuElement.Attributes = (viewModel.unit == unit) ? [.disabled] : []
+        return UIAction(title: unit.title, image: image, attributes: attributes) { [unowned self] _ in
+            self.unit = unit
+        }
     }
     
     private func showAlert(title: String = "Uh Oh", message: String) {
@@ -111,11 +122,12 @@ class WeatherViewController: UIViewController {
         present(alert, animated: true, completion: nil)
     }
     
-    private func fetchCurrentWeather(fromLocation location: CLLocation?, unit: Unit) {
+    private func fetchCurrentWeather(fromLocation location: CLLocation?) {
         Task {
             try await viewModel.fetchCurrentWeather(fromLocation: location, unit: unit)
         }
         self.changeUnitButton.title = unit.abbreviatedTitle
+        self.expanded = false
     }
 }
 
@@ -158,7 +170,7 @@ extension WeatherViewController: CLLocationManagerDelegate {
         switch manager.authorizationStatus {
         case .notDetermined: manager.requestWhenInUseAuthorization()
         case .authorizedWhenInUse:
-            fetchCurrentWeather(fromLocation: manager.location, unit: viewModel.unit)
+            fetchCurrentWeather(fromLocation: manager.location)
         default:
             showAlert(message: "Please check your location permissions in Settings.")
             tableView.reloadData()
@@ -166,36 +178,11 @@ extension WeatherViewController: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        fetchCurrentWeather(fromLocation: manager.location, unit: viewModel.unit)
+        fetchCurrentWeather(fromLocation: manager.location)
         manager.stopUpdatingLocation()
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         showAlert(title: "Location Update Error", message: error.localizedDescription)
-    }
-}
-
-// MARK: - Menu
-private extension WeatherViewController {
-    func makeFarehnheitAction() -> UIAction {
-        let attributes: UIMenuElement.Attributes = (viewModel.unit == .imperial) ? [.disabled] : []
-        let image: UIImage? = (viewModel.unit == .imperial) ? .init(systemName: "checkmark") : nil
-      return UIAction(
-        title: "Fahrenheit (Fº)",
-        image: image,
-        attributes: attributes) { [unowned self] _ in
-            self.fetchCurrentWeather(fromLocation: self.viewModel.placemark?.location, unit: .imperial)
-        }
-    }
-    
-    func makeCelsiusAction() -> UIAction {
-        let attributes: UIMenuElement.Attributes = (viewModel.unit == .metric) ? [.disabled] : []
-        let image: UIImage? = (viewModel.unit == .metric) ? .init(systemName: "checkmark") : nil
-      return UIAction(
-        title: "Celsius (Cº)",
-        image: image,
-        attributes: attributes) { [unowned self] _ in
-            self.fetchCurrentWeather(fromLocation: self.viewModel.placemark?.location, unit: .metric)
-        }
     }
 }
