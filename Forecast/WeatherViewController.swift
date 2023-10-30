@@ -46,7 +46,7 @@ class WeatherViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UINib(nibName: "ForecastCell", bundle: nil), forCellReuseIdentifier: "ForecastCell")
-        
+        changeUnitButton.setTitleTextAttributes([NSAttributedString.Key.font : UIFont.systemFont(ofSize: 25)], for: .normal)
         dataSource = UITableViewDiffableDataSource<Int, Forecast>(tableView: tableView) { (tableView, indexPath, forecast) -> ForecastCell? in
             let cell = tableView.dequeueReusableCell(withIdentifier: "ForecastCell", for: indexPath) as! ForecastCell
             cell.configure(with: ForecastViewModel(forecast: forecast))
