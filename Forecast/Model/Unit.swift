@@ -8,21 +8,24 @@
 import Foundation
 import UIKit
 
-enum Unit: String {
+enum Unit: String, CaseIterable {
     case metric
     case imperial
+    case kelvin
     
     var title: String {
         switch self {
-        case .metric: "Celsius (Cº)"
-        case .imperial: "Fahrenheit (Fº)"
+        case .metric: "Celsius (ºC)"
+        case .imperial: "Fahrenheit (ºF)"
+        case .kelvin: "Kelvin (ºK)"
         }
     }
     
     var abbreviatedTitle: String {
         switch self {
-        case .metric: "Cº"
-        case .imperial: "Fº"
+        case .metric: "ºC"
+        case .imperial: "ºF"
+        case .kelvin: "ºK"
         }
     }
 }

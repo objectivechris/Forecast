@@ -20,11 +20,6 @@ class WeatherViewController: UIViewController {
     private var expanded = false
     private var selectedRowIndex: Int?
     private var subscriptions = Set<AnyCancellable>()
-    private var unit: Unit = .imperial {
-        didSet {
-            self.fetchCurrentWeather(fromLocation: viewModel.placemark?.location ?? locationManager.location)
-        }
-    }
     
     private lazy var locationManager: CLLocationManager = {
         let manager = CLLocationManager()
@@ -52,9 +47,7 @@ class WeatherViewController: UIViewController {
             cell.configure(with: ForecastViewModel(forecast: forecast))
             return cell
         }
-        
-        self.unit = viewModel.unit
-        
+                
         if locationManager.authorizationStatus == .notDetermined {
             locationManager.requestWhenInUseAuthorization()
         } else if locationManager.authorizationStatus == .authorizedWhenInUse {
@@ -103,7 +96,11 @@ class WeatherViewController: UIViewController {
     }
     
     private func reloadMenu() {
-        let menu = UIMenu(title: "Change Unit", children: [setMenuAction(forUnit: .imperial), setMenuAction(forUnit: .metric)])
+        var menuActions = [UIAction]()
+        for unit in Unit.allCases {
+            menuActions.append(setMenuAction(forUnit: unit))
+        }
+        let menu = UIMenu(title: "Change Unit", children: menuActions)
         changeUnitButton.menu = menu
     }
     
@@ -111,22 +108,23 @@ class WeatherViewController: UIViewController {
         let image: UIImage? = (viewModel.unit == unit) ? .init(systemName: "checkmark") : nil
         let attributes: UIMenuElement.Attributes = (viewModel.unit == unit) ? [.disabled] : []
         return UIAction(title: unit.title, image: image, attributes: attributes) { [unowned self] _ in
-            self.unit = unit
+            self.viewModel.unit = unit
+            self.fetchCurrentWeather(fromLocation: viewModel.placemark?.location ?? locationManager.location)
         }
+    }
+    
+    private func fetchCurrentWeather(fromLocation location: CLLocation?) {
+        Task {
+            try await viewModel.fetchCurrentWeather(fromLocation: location, unit: viewModel.unit)
+            self.unitLabel.text = viewModel.unit.abbreviatedTitle
+        }
+        self.expanded = false
     }
     
     private func showAlert(title: String = "Uh Oh", message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
-    }
-    
-    private func fetchCurrentWeather(fromLocation location: CLLocation?) {
-        Task {
-            try await viewModel.fetchCurrentWeather(fromLocation: location, unit: unit)
-            self.unitLabel.text = unit.abbreviatedTitle
-        }
-        self.expanded = false
     }
 }
 
