@@ -31,7 +31,7 @@ class ForecastCell: UITableViewCell {
         highTempLabel.text = model.highTemp
         lowTempLabel.text = model.lowTemp
         humidityLabel.text = "Humidity: " + model.humidity
-        pressureLabel.text = "Pressure: " + model.pressure
+        pressureLabel.text = "Precipitation: " + model.precipitation
         windSpeedLabel.text = "Cloudiness: " + model.cloudiness
         
         Task {

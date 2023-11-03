@@ -15,7 +15,7 @@ public class ForecastViewModel {
     let highTemp: String
     let lowTemp: String
     let humidity: String
-    let pressure: String
+    let precipitation: String
     let iconURL: URL
     
     init(forecast: Forecast) {
@@ -42,8 +42,7 @@ public class ForecastViewModel {
         let roundedLowTemp = Int(forecast.temp.low)
         self.lowTemp = "\(roundedLowTemp)º"
         
-        let roundedPressure = Int(forecast.pressure)
-        self.pressure = "\(roundedPressure) hPa"
+        self.precipitation = "\(Int(forecast.precipitation * 100))%"
         
         let roundedHumidity = Int(forecast.humidity)
         self.humidity = "\(roundedHumidity)%"

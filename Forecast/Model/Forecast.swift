@@ -14,7 +14,7 @@ struct Forecasts: Decodable {
 struct Forecast: Decodable, Hashable {
     let weekday: TimeInterval
     let temp: Temperature
-    let pressure: Double
+    let precipitation: Double
     let humidity: Double
     let cloudiness: Double
     let weatherDetails: [WeatherDetails]
@@ -22,7 +22,7 @@ struct Forecast: Decodable, Hashable {
     enum CodingKeys: String, CodingKey {
         case weekday = "dt"
         case temp
-        case pressure
+        case precipitation = "pop"
         case humidity
         case cloudiness = "clouds"
         case weatherDetails = "weather"
