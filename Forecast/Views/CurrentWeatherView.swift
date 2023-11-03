@@ -30,6 +30,7 @@ struct CurrentWeatherView: View {
                             ProgressView()
                         }
                         .frame(width: 44, height: 44)
+                        .shadow(radius: 1)
                     
                     Text(viewModel.description)
                         .font(.custom("ArialRoundedMTBold", size: 20))
