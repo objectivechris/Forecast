@@ -29,13 +29,14 @@ class WeatherViewController: UIViewController {
     }()
     
     private let viewModel = WeatherViewModel()
+    private var shouldAnimate = true
     private var dataSource: UITableViewDiffableDataSource<Int, Forecast>?
     private var forecasts = [Forecast]() {
         didSet {
             var snapshot = NSDiffableDataSourceSnapshot<Int, Forecast>()
             snapshot.appendSections([1])
             snapshot.appendItems(forecasts)
-            dataSource?.apply(snapshot, animatingDifferences: true)
+            dataSource?.apply(snapshot, animatingDifferences: shouldAnimate)
         }
     }
     
@@ -117,6 +118,7 @@ class WeatherViewController: UIViewController {
         Task {
             try await viewModel.fetchCurrentWeather(fromLocation: location, unit: viewModel.unit)
             self.unitLabel.text = viewModel.unit.abbreviatedTitle
+            self.shouldAnimate = false
         }
         self.expanded = false
     }
