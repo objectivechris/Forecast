@@ -73,7 +73,7 @@ class WeatherViewModel: ObservableObject {
                 self.placemark = placemark
                 self.isFetching = false
                 
-                self.city = placemark.subLocality ?? placemark.locality ?? placemark.country ?? "Unknown City"
+                self.city = placemark.locality ?? placemark.country ?? "Unknown City"
                 if let icon = currentWeather.details.first?.icon {
                     self.iconURL = URL(string: "https://openweathermap.org/img/wn/\(icon)@2x.png")
                 }
