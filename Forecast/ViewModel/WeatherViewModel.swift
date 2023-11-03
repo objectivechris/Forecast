@@ -27,18 +27,21 @@ class WeatherViewModel: ObservableObject {
     private let client = OWClient()
     private let geocoder = CLGeocoder()
     
-    init() { // Loads last saved location if there is one
-        if let lastSavedLocation = UserDefaults.standard.data(forKey: "savedLocation"),
-           let decodedLocation = try? NSKeyedUnarchiver.unarchivedObject(ofClass: CLLocation.self, from: lastSavedLocation) {
+    init() { // Loads last saved location & unit if there is one
+        if let data = UserDefaults.standard.data(forKey: "savedInfo"),
+            let dict = try? NSKeyedUnarchiver.unarchivedDictionary(keysOfClasses: [NSString.self], objectsOfClasses: [CLLocation.self, NSString.self], from: data) as? [String: Any],
+           let location = dict["savedLocation"] as? CLLocation,
+            let unit = dict["savedUnit"] as? String {
             Task {
-                try await fetchCurrentWeather(fromLocation: decodedLocation, unit: unit)
+                try await fetchCurrentWeather(fromLocation: location, unit: Unit(rawValue: unit) ?? .imperial)
             }
         }
     }
     
     private func saveLocation(_ location: CLLocation) {
-        if let encodedLocation = try? NSKeyedArchiver.archivedData(withRootObject: location, requiringSecureCoding: false) {
-            UserDefaults.standard.set(encodedLocation, forKey: "savedLocation")
+        let dict: [String: Any] = ["savedLocation": location, "savedUnit": NSString(string: unit.rawValue)]
+        if let data = try? NSKeyedArchiver.archivedData(withRootObject: dict, requiringSecureCoding: false) {
+            UserDefaults.standard.set(data, forKey: "savedInfo")
         }
     }
     
@@ -100,7 +103,7 @@ extension WeatherViewModel {
         vm.temperature = "42º"
         vm.lowTemp = "L:34º"
         vm.highTemp = "H:67º"
-        vm.iconURL = nil
+        vm.iconURL = URL(string: "https://openweathermap.org/img/wn/01d@2x.png")
         return vm
     }
 }

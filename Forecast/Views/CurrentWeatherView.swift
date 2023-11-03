@@ -22,17 +22,14 @@ struct CurrentWeatherView: View {
                     .font(.custom("ArialRoundedMTBold", size: 44.0))
                 
                 HStack(spacing: 0) {
-                    AsyncImage(url: viewModel.iconURL) { phase in
-                        switch phase {
-                        case .success(let image):
-                            image.resizable()
+                    AsyncImage(url: viewModel.iconURL) { image in
+                            image
+                                .resizable()
                                 .aspectRatio(contentMode: .fit)
-                                .frame(maxWidth: 50, maxHeight: 50)
-                                .shadow(radius: 1)
-                        default:
-                            EmptyView()
+                        } placeholder: {
+                            ProgressView()
                         }
-                    }
+                        .frame(width: 44, height: 44)
                     
                     Text(viewModel.description)
                         .font(.custom("ArialRoundedMTBold", size: 20))
