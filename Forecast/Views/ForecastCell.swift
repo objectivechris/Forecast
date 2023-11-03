@@ -32,7 +32,7 @@ class ForecastCell: UITableViewCell {
         lowTempLabel.text = model.lowTemp
         humidityLabel.text = "Humidity: " + model.humidity
         pressureLabel.text = "Pressure: " + model.pressure
-        windSpeedLabel.text = "Wind Speed: " + model.windSpeed
+        windSpeedLabel.text = "Cloudiness: " + model.cloudiness
         
         Task {
            try await tempImageView.load(url: model.iconURL, placeholder: nil)

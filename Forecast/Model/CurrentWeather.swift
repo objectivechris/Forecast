@@ -20,6 +20,15 @@ struct CurrentWeather: Decodable {
 struct Main: Decodable {
     let temp: Double
     let humidity: Double
+    let low: Double
+    let high: Double
+    
+    enum CodingKeys: String, CodingKey {
+        case temp
+        case humidity
+        case low = "temp_min"
+        case high = "temp_max"
+    }
 }
 
 struct WeatherDetails: Decodable {

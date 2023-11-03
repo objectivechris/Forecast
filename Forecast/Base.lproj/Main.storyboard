@@ -39,7 +39,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fº" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="coP-T2-0Dg">
-                                                    <rect key="frame" x="353" y="13.333333333333334" width="20" height="23.333333333333329"/>
+                                                    <rect key="frame" x="343" y="13.333333333333334" width="20" height="23.333333333333329"/>
                                                     <fontDescription key="fontDescription" name="ArialRoundedMTBold" family="Arial Rounded MT Bold" pointSize="20"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -49,7 +49,7 @@
                                                 <constraint firstItem="0HF-8L-kIy" firstAttribute="centerY" secondItem="fVN-pw-uhZ" secondAttribute="centerY" id="CWc-Nc-sT3"/>
                                                 <constraint firstItem="coP-T2-0Dg" firstAttribute="centerY" secondItem="0HF-8L-kIy" secondAttribute="centerY" id="OtB-3H-Gl2"/>
                                                 <constraint firstItem="0HF-8L-kIy" firstAttribute="leading" secondItem="fVN-pw-uhZ" secondAttribute="leading" constant="15" id="Va0-9N-Uvj"/>
-                                                <constraint firstAttribute="trailing" secondItem="coP-T2-0Dg" secondAttribute="trailing" constant="20" id="m4c-LP-Q0t"/>
+                                                <constraint firstAttribute="trailing" secondItem="coP-T2-0Dg" secondAttribute="trailing" constant="30" id="m4c-LP-Q0t"/>
                                                 <constraint firstItem="coP-T2-0Dg" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="0HF-8L-kIy" secondAttribute="trailing" constant="150" id="t4s-JH-Cul"/>
                                             </constraints>
                                         </view>

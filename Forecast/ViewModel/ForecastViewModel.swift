@@ -11,7 +11,7 @@ public class ForecastViewModel {
     
     let dayOftheWeek: String
     let description: String
-    let windSpeed: String
+    let cloudiness: String
     let highTemp: String
     let lowTemp: String
     let humidity: String
@@ -30,11 +30,11 @@ public class ForecastViewModel {
         let date = Date(timeIntervalSince1970: forecast.weekday)
         let formatter = DateFormatter()
         formatter.dateFormat = "EEEE"
-        let weekday = formatter.string(from: date)
+        let weekday = Calendar.current.isDateInToday(date) ? "Today" : formatter.string(from: date)
         self.dayOftheWeek = weekday
         
-        let speed = Int(forecast.windSpeed)
-        self.windSpeed = "\(speed) mph"
+        let cloudiness = Int(forecast.cloudiness)
+        self.cloudiness = "\(cloudiness)%"
         
         let roundedHighTemp = Int(forecast.temp.high)
         self.highTemp = "\(roundedHighTemp)º"

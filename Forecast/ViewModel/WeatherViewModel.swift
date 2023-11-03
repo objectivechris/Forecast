@@ -11,11 +11,12 @@ import Foundation
 typealias Location = CLLocationCoordinate2D
 
 @MainActor
-public class WeatherViewModel: ObservableObject {
+class WeatherViewModel: ObservableObject {
     @Published var city: String = ""
     @Published var description: String = ""
     @Published var temperature: String = ""
-    @Published var humidity: String = ""
+    @Published var highTemp: String = ""
+    @Published var lowTemp: String = ""
     @Published var iconURL: URL?
     @Published var forecasts: [Forecast] = []
     @Published var unit: Unit = .imperial
@@ -80,15 +81,26 @@ public class WeatherViewModel: ObservableObject {
                     self.description = "No description available"
                 }
                 
-                let roundedTemp = Int(currentWeather.main.temp)
-                self.temperature = "\(roundedTemp)º"
-                
-                let roundedHumidity = Int(currentWeather.main.humidity)
-                self.humidity = "Humidity: \(roundedHumidity)%"
+                self.temperature = "\(Int(currentWeather.main.temp.rounded()))º"
+                self.highTemp = "H:\(Int(currentWeather.main.high.rounded()))º"
+                self.lowTemp = "L:\(Int(currentWeather.main.low.rounded()))º"
                 
             } catch {
                 self.error = OWError.locationNotFound
             }
         }
+    }
+}
+
+extension WeatherViewModel {
+    static func example() -> WeatherViewModel {
+        let vm = WeatherViewModel()
+        vm.city = "Atlanta"
+        vm.description = "Cloudy"
+        vm.temperature = "42º"
+        vm.lowTemp = "L:34º"
+        vm.highTemp = "H:67º"
+        vm.iconURL = nil
+        return vm
     }
 }

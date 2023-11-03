@@ -16,7 +16,7 @@ struct CurrentWeatherView: View {
         if viewModel.isFetching {
             ProgressView()
         } else {
-            VStack(spacing: 10) {
+            VStack(spacing: 5) {
                 
                 Text(viewModel.city)
                     .font(.custom("ArialRoundedMTBold", size: 44.0))
@@ -40,11 +40,14 @@ struct CurrentWeatherView: View {
                 }
                 
                 Text(viewModel.temperature)
-                    .font(.custom("ArialRoundedMTBold", size: 156.0))
+                    .font(.custom("ArialRoundedMTBold", size: 130.0))
                 
-                Text(viewModel.humidity)
-                    .font(.custom("ArialRoundedMTBold", size: 23.0))
-                    .foregroundColor(.gray)
+                HStack(spacing: 10) {
+                    Text(viewModel.highTemp)
+                    Text(viewModel.lowTemp)
+                }
+                .font(.custom("ArialRoundedMTBold", size: 23.0))
+                .foregroundColor(.gray)
             }
             .background(Color(.clear))
         }
@@ -52,5 +55,5 @@ struct CurrentWeatherView: View {
 }
 
 #Preview {
-    CurrentWeatherView(viewModel: WeatherViewModel())
+    CurrentWeatherView(viewModel: WeatherViewModel.example())
 }
