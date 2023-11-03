@@ -74,8 +74,8 @@ class WeatherViewController: UIViewController {
             .store(in: &subscriptions)
     }
     
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        hideKeyboard()
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
         navigationController?.navigationBar.isHidden = (UIDevice.current.orientation.isLandscape) ? true : false
     }
     
