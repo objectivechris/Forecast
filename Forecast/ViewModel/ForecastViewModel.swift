@@ -33,19 +33,19 @@ public class ForecastViewModel {
         let weekday = Calendar.current.isDateInToday(date) ? "Today" : formatter.string(from: date)
         self.dayOftheWeek = weekday
         
-        let cloudiness = Int(forecast.cloudiness)
-        self.cloudiness = "\(cloudiness)%"
-        
-        let roundedHighTemp = Int(forecast.temp.high)
+        let roundedHighTemp = Int(forecast.temp.high.rounded())
         self.highTemp = "\(roundedHighTemp)º"
         
-        let roundedLowTemp = Int(forecast.temp.low)
+        let roundedLowTemp = Int(forecast.temp.low.rounded())
         self.lowTemp = "\(roundedLowTemp)º"
         
         self.precipitation = "\(Int(forecast.precipitation * 100))%"
         
         let roundedHumidity = Int(forecast.humidity)
         self.humidity = "\(roundedHumidity)%"
+        
+        let cloudiness = Int(forecast.cloudiness)
+        self.cloudiness = "\(cloudiness)%"
         
         if let icon = forecast.weatherDetails.first?.icon, let url = URL(string: "https://openweathermap.org/img/wn/\(icon)@2x.png") {
             self.iconURL = url
