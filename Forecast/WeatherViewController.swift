@@ -116,8 +116,8 @@ class WeatherViewController: UIViewController {
     
     private func fetchCurrentWeather(fromLocation location: CLLocation?) {
         Task {
-            try await viewModel.fetchCurrentWeather(fromLocation: location, unit: viewModel.unit)
             self.unitLabel.text = viewModel.unit.abbreviatedTitle
+            try await viewModel.fetchCurrentWeather(fromLocation: location, unit: viewModel.unit)
             self.shouldAnimate = false
         }
         self.expanded = false
@@ -173,11 +173,6 @@ extension WeatherViewController: CLLocationManagerDelegate {
             showAlert(message: "Please check your location permissions in Settings.")
             tableView.reloadData()
         }
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        fetchCurrentWeather(fromLocation: manager.location)
-        manager.stopUpdatingLocation()
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
